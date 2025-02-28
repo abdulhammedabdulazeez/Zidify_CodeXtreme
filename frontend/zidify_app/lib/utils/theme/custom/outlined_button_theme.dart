@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../constants/constants/colors.dart';
-import '../../constants/constants/sizes.dart';
+import 'package:zidify_app/utils/constants/sizes.dart';
+import '../../constants/colors.dart';
 
 class AppOutlinedButtonTheme {
   AppOutlinedButtonTheme._(); //To avoid creating instances

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../constants/theme/custom_themes/text_theme.dart';
-import '../constants/theme/custom_themes/appbar_theme.dart';
-import '../constants/theme/custom_themes/checkbox_theme.dart';
-import '../constants/theme/custom_themes/chip_theme.dart';
-import '../constants/theme/custom_themes/elevated_button_theme.dart';
-import '../constants/theme/custom_themes/outlined_button_theme.dart';
-import '../constants/theme/custom_themes/text_field_theme.dart';
+import 'package:zidify_app/utils/theme/custom/appbar_theme.dart';
+import 'package:zidify_app/utils/theme/custom/checkbox_theme.dart';
+import 'package:zidify_app/utils/theme/custom/chip_theme.dart';
+import 'package:zidify_app/utils/theme/custom/elevated_button_theme.dart';
+import 'package:zidify_app/utils/theme/custom/outlined_button_theme.dart';
+import 'package:zidify_app/utils/theme/custom/text_field_theme.dart';
+import 'package:zidify_app/utils/theme/custom/text_theme.dart';
 
 class AGAppTheme {
   AGAppTheme._();

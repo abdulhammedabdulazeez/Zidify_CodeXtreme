@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../constants/constants/colors.dart';
-import '../../constants/constants/sizes.dart';
+import 'package:zidify_app/utils/constants/colors.dart';
+import 'package:zidify_app/utils/constants/sizes.dart';
 
 /// App Elevated Button Theme
 class AppElevatedButtonTheme {

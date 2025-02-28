@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../constants/constants/colors.dart';
+import 'package:zidify_app/utils/constants/colors.dart';
 
 class AppChipTheme {
   AppChipTheme._();
