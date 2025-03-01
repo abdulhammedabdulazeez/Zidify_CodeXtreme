@@ -1,30 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { OpenAI } from 'openai';
 import * as fs from 'fs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OpenaiService extends OpenAI {
-  constructor() {
+  constructor(private readonly config: ConfigService) {
     super({
-      apiKey:
-        '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',
+      apiKey: config.get<string>('OPENAI_API_KEY'),
     });
   }
 }
 
 @Injectable()
 export class WordService {
-  constructor(private readonly openai: OpenaiService) {}
+  constructor(
+    private readonly openai: OpenaiService,
+    private readonly config: ConfigService,
+  ) {}
 
   // private async generateWordMeaningAndUsages(wordText: string, user: User) {
   async generateWordMeaningAndUsages(wordText: string) {
-    const threadId = 'thread_pDl9ywtEjdb9yPYcd47wcXOw';
+    const threadId = this.config.get<string>('THREAD_ID');
     await this.openai.beta.threads.messages.create(threadId, {
       role: 'user',
       content: wordText,
     });
     await this.openai.beta.threads.runs.create(threadId, {
-      assistant_id: 'asst_7jM5pDUO793ZLbgUCMsTnjDF',
+      assistant_id: this.config.get<string>('ASST_ID'),
     });
 
     const intervalId = setInterval(async () => {
