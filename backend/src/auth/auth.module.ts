@@ -7,10 +7,11 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { SaveBoxModule } from 'src/domains/save-box/save-box.module';
 
 @Module({
   controllers: [AuthController],
-  imports: [PassportModule],
+  imports: [PassportModule, SaveBoxModule],
   providers: [
     AuthService,
     UsersService,
