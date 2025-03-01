@@ -1,4 +1,13 @@
 import 'package:get_it/get_it.dart';
+import 'package:zidify_app/features/auth/data_layer/repository/auth.dart';
+import 'package:zidify_app/features/auth/data_layer/source/auth_api_service.dart';
+import 'package:zidify_app/features/auth/data_layer/source/auth_local_service.dart';
+import 'package:zidify_app/features/auth/domain_layer/bloc/auth_bloc.dart';
+import 'package:zidify_app/features/auth/domain_layer/repository/auth.dart';
+import 'package:zidify_app/features/auth/domain_layer/usecases/is_logged_in.dart';
+import 'package:zidify_app/features/auth/domain_layer/usecases/logout.dart';
+import 'package:zidify_app/features/auth/domain_layer/usecases/signin.dart';
+import 'package:zidify_app/features/auth/domain_layer/usecases/signup.dart';
 import 'package:zidify_app/features/saveBox/data_layer/repository/savebox.dart';
 import 'package:zidify_app/features/saveBox/data_layer/source/savebox_api_service.dart';
 import 'package:zidify_app/features/saveBox/domain_layer/blocs/deposit/bloc/deposit_bloc.dart';
@@ -27,6 +36,30 @@ final sl = GetIt.instance;
 void setupServiceLocator() {
   sl.registerSingleton<DioClient>(DioClient());
 
+  // AUTH FEATURE
+  // Auth-Services
+  sl.registerSingleton<AuthApiService>(AuthApiServiceImpl());
+
+  // Auth-Local Services
+  sl.registerSingleton<AuthLocalService>(AuthLocalServiceImpl());
+
+  //  Auth-Repositiries
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
+
+  // Auth-Usecases
+  sl.registerSingleton<SignupUseCase>(SignupUseCase());
+  sl.registerSingleton<SigninUseCase>(SigninUseCase());
+  sl.registerSingleton<IsLoggedInUseCase>(IsLoggedInUseCase());
+  sl.registerSingleton<LogoutUseCase>(LogoutUseCase());
+
+  // Auth-Bloc
+  sl.registerFactory<AuthBloc>(
+      () => AuthBloc(signupUseCase: sl<SignupUseCase>()),
+      instanceName: 'SignupBloc');
+  sl.registerFactory<AuthBloc>(
+      () => AuthBloc(signinUseCase: sl<SigninUseCase>()),
+      instanceName: 'SigninBloc');
+
   // Local Storage
   sl.registerSingleton<SecureStorageService>(SecureStorageService());
 
@@ -42,7 +75,6 @@ void setupServiceLocator() {
 
   // User-Bloc
   sl.registerSingleton<UserBloc>(UserBloc());
-
 
   // SAVEBOX FEATURE
   // SaveBox API Service

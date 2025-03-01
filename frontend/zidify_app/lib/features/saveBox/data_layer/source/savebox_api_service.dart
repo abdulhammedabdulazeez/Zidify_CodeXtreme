@@ -1,7 +1,6 @@
 import 'package:zidify_app/features/saveBox/data_layer/models/deposit_params_models.dart';
 import 'package:zidify_app/features/saveBox/data_layer/models/withdrawal_params_models.dart';
 import 'package:zidify_app/service_locator.dart';
-import 'package:zidify_app/utils/constants/texts.dart';
 import 'package:zidify_app/utils/core/network/api_url.dart';
 import 'package:zidify_app/utils/core/network/dio_client.dart';
 import 'package:zidify_app/utils/core/network/secure_storage.dart';
@@ -20,8 +19,8 @@ class SaveboxApiServiceImpl implements SaveboxApiService {
   @override
   Future<Either<Exception, Response>> getUserSaveBox() async {
     try {
-      // var token = await sl<SecureStorageService>().readToken('accessToken');
-      var token = AppTexts.staticToken;
+      var token = await sl<SecureStorageService>().readToken('accessToken');
+      // var token = AppTexts.staticToken;
       var response = await sl<DioClient>().get(ApiUrls.saveBoxInfo,
           options: Options(headers: {"Authorization": "Bearer $token"}));
       return Right(response);
@@ -33,8 +32,8 @@ class SaveboxApiServiceImpl implements SaveboxApiService {
   @override
   Future<Either<Exception, Response>> getFundingSources() async {
     try {
-      // var token = await sl<SecureStorageService>().readToken('accessToken');
-      var token = AppTexts.staticToken;
+      var token = await sl<SecureStorageService>().readToken('accessToken');
+      // var token = AppTexts.staticToken;
       var response = await sl<DioClient>().get(ApiUrls.fundingSources,
           options: Options(headers: {"Authorization": "Bearer $token"}));
       return Right(response);
@@ -46,8 +45,8 @@ class SaveboxApiServiceImpl implements SaveboxApiService {
   @override
   Future<Either<Exception, Response>> getFundDestinations() async {
     try {
-      // var token = await sl<SecureStorageService>().readToken('accessToken');
-      var token = AppTexts.staticToken;
+      var token = await sl<SecureStorageService>().readToken('accessToken');
+      // var token = AppTexts.staticToken;
       var response = await sl<DioClient>().get(ApiUrls.fundDestinations,
           options: Options(headers: {"Authorization": "Bearer $token"}));
       return Right(response);
@@ -60,8 +59,8 @@ class SaveboxApiServiceImpl implements SaveboxApiService {
   Future<Either> deposit(DepositParams depositParams) async {
     try {
       var id = await sl<SecureStorageService>().readId('saveBoxId');
-      //  var token = await sl<SecureStorageService>().readToken('accessToken');
-      var token = AppTexts.staticToken;
+       var token = await sl<SecureStorageService>().readToken('accessToken');
+      // var token = AppTexts.staticToken;
 
       var response = await sl<DioClient>().post(
         ApiUrls.deposit(id!),
@@ -78,8 +77,8 @@ class SaveboxApiServiceImpl implements SaveboxApiService {
   Future<Either> withdraw(WithdrawalParams withdrawalParams) async {
     try {
       var id = await sl<SecureStorageService>().readId('saveBoxId');
-      // var token = await sl<SecureStorageService>().readToken('accessToken');
-      var token = AppTexts.staticToken;
+      var token = await sl<SecureStorageService>().readToken('accessToken');
+      // var token = AppTexts.staticToken;
 
       var response = await sl<DioClient>().post(
         ApiUrls.withdraw(id!),

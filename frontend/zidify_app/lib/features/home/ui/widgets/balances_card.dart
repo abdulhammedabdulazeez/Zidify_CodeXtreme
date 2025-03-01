@@ -1,6 +1,5 @@
 import 'package:zidify_app/features/user/domain_layer/entities/user_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/texts.dart';

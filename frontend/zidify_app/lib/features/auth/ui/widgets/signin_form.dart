@@ -1,5 +1,6 @@
 // import 'package:zidify_app/features/auth/domain_layer/bloc/auth_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zidify_app/features/auth/domain_layer/bloc/auth_bloc.dart';
 import 'package:zidify_app/utils/constants/colors.dart';
 import 'package:zidify_app/utils/constants/sizes.dart';
 import 'package:zidify_app/utils/constants/texts.dart';
@@ -45,12 +46,11 @@ class _SignInFormViewState extends State<SignInFormView> {
     if (_formField.currentState!.validate()) {
       _formField.currentState!.save();
 
-      // BlocProvider.of<AuthBloc>(context).add(OnLoginButtonClickedAuthEvent(
-      //   email: _emailTextController.text,
-      //   password: _passwordTextController.text,
-      // ));
+      BlocProvider.of<AuthBloc>(context).add(OnLoginButtonClickedAuthEvent(
+        email: _emailTextController.text,
+        password: _passwordTextController.text,
+      ));
 
-      context.go(AppTexts.homeRoute);
     }
   }
 

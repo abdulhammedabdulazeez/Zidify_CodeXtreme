@@ -1,4 +1,6 @@
 // import 'package:zidify_app/features/auth/domain_layer/bloc/auth_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zidify_app/features/auth/domain_layer/bloc/auth_bloc.dart';
 import 'package:zidify_app/features/auth/ui/widgets/signup_input_tile.dart';
 import 'package:zidify_app/utils/components/input_pswd_tile.dart';
 import 'package:zidify_app/utils/constants/colors.dart';
@@ -68,13 +70,13 @@ class _SignUpFormViewState extends State<SignUpFormView> {
     if (_formField.currentState!.validate()) {
       _formField.currentState!.save();
 
-      // BlocProvider.of<AuthBloc>(context).add(OnSignupSubmitAuthEvent(
-      //   email: _emailTextController.text,
-      //   firstName: _firstNameTextController.text,
-      //   lastName: _lastNameTextController.text,
-      //   password: _passwordTextController.text,
-      //   phoneNumber: _phoneNumberTextController.text,
-      // ));
+      BlocProvider.of<AuthBloc>(context).add(OnSignupSubmitAuthEvent(
+        email: _emailTextController.text,
+        firstName: _firstNameTextController.text,
+        lastName: _lastNameTextController.text,
+        password: _passwordTextController.text,
+        phoneNumber: _phoneNumberTextController.text,
+      ));
     }
   }
 

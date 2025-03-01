@@ -34,8 +34,6 @@ import 'package:zidify_app/utils/constants/navigation_params/route_helper.dart';
 import 'package:zidify_app/utils/constants/texts.dart';
 
 class AppGoRouter {
-  // static GoRouter get router => _goRouter;
-
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _shellNavigatorHomeKey = GlobalKey<NavigatorState>();
   static final _shellNavigatorSavingsKey = GlobalKey<NavigatorState>();
@@ -43,9 +41,9 @@ class AppGoRouter {
   static final _shellNavigatorProfileKey = GlobalKey<NavigatorState>();
 
   GoRouter router = GoRouter(
-    // navigatorKey: _rootNavigatorKey,
-    // initialLocation: AppTexts.homeRoute,
-    initialLocation: AppTexts.signupRoute,
+    navigatorKey: _rootNavigatorKey,
+    // initialLocation: AppTexts.homeRoute, // Set initial location to home route
+    initialLocation: AppTexts.signupRoute, // Set initial location to home route
 
     debugLogDiagnostics: true,
     routes: [

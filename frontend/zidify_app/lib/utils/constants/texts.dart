@@ -58,7 +58,6 @@ class AppTexts {
   static const address = 'Address';
   static const support = 'Support';
 
-
   /// HOME
   static const helloUser = 'Hello Samuel,';
   static const totalSavingsBalance = 'Total Savings Balance';
@@ -132,13 +131,11 @@ class AppTexts {
   static const String ongoingSaveGoals = 'Ongoing';
   static const String completedSaveGoals = 'Completed';
 
-
   // Nav Bar
   static const String home = 'Home';
   static const String savings = 'Savings';
   // static const String profile = 'Profile';
   static const String history = 'History';
-
 
   //ROUTES
   static const signupRoute = '/signup';
@@ -149,7 +146,6 @@ class AppTexts {
 
   static const historyRoute = '/history';
   static const savingsTipsRoute = '/savingsTipsPage';
-
 
   // SaveBox Routes
   static const saveBoxRoute = '/saveBoxPage';
