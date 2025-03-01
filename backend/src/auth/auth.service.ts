@@ -17,6 +17,8 @@ import * as argon from 'argon2';
 import * as crypto from 'crypto';
 import { UpdateUserDto } from 'src/users/dtos/update-user.dto';
 import { DatabaseService } from 'src/database/database.service';
+import { CreateSaveBoxDto } from 'src/domains/save-box/dto/create-save-box.dto';
+import { SaveBoxService } from 'src/domains/save-box/save-box.service';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +28,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly db: DatabaseService,
-    // private readonly activityService: ActivityService,
+    private readonly saveBoxService: SaveBoxService,
   ) {}
 
   /**
@@ -61,8 +63,21 @@ export class AuthService {
    * @returns - A promise that resolves to void.
    */
   async createOtherUserTables(user: User): Promise<void> {
+    // CREATE A SAVE BOX FOR THE USER
+    this.createUserSaveBox(user);
+
     // CREATE USER TOTAL SAVINGS
     this.createUserTotalSavings(user.id);
+  }
+
+  async createUserSaveBox(user: User) {
+    const saveBoxDto: CreateSaveBoxDto = {
+      userId: user.id,
+      accountNumber: this.saveBoxService.generateUnique13DigitNumber(),
+      //TODO: ADD ACCOUNT NAME
+      // accountName: user.profile.firstName + ' ' + user.profile.lastName,
+    };
+    return await this.saveBoxService.create(saveBoxDto);
   }
 
   async createUserTotalSavings(userId: string) {
