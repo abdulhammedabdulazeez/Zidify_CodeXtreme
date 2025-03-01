@@ -10,25 +10,12 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import {
-  CurrentUser,
-  RequireAbilities,
-  RequireUserAbilities,
-} from 'src/common/decorators';
+import { CurrentUser } from 'src/common/decorators';
 import { User as IUser } from '@prisma/client';
-import {
-  Action,
-  Subjects,
-  CaslAbilityFactory,
-} from 'src/casl/casl-ability.factory/casl-ability.factory';
-import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private caslAbilityFactory: CaslAbilityFactory,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -36,7 +23,6 @@ export class UsersController {
   }
 
   @Get('me')
-  @RequireUserAbilities({ action: Action.Read, subject: User })
   findMe(@CurrentUser('id') userId: string) {
     return this.usersService.findMe(userId);
   }
