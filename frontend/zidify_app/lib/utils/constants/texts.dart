@@ -3,6 +3,9 @@ class AppTexts {
 
   static const zidify = 'Zidify ';
 
+  static const staticToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM0ZDNhNTBmLTliOGMtNDk4NC05YTBjLTE5OWRiZjEyOGY0NyIsImVtYWlsIjoiYm9kZUBnbWFpbC5jb20iLCJwaG9uZU51bWJlciI6IjA3OTE5ODI3OTciLCJhdWQiOiJhZ2FrZXNpIiwiaXNzIjoiYWdha2VzaSIsImlhdCI6MTczODU4NDMxNzAzNiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODU4NjkwOTAzNn0.NmPlp7BojzRHIrhG-DsqKhjLKYnS9illa--taBh-big";
+
   /// AUTH
   static const welcomeBack = 'Welcome back,';
   static const letsGetStarted = 'Let\'s get Started';
@@ -55,13 +58,113 @@ class AppTexts {
   static const address = 'Address';
   static const support = 'Support';
 
+
+  /// HOME
+  static const helloUser = 'Hello Samuel,';
+  static const totalSavingsBalance = 'Total Savings Balance';
+  static const currency = 'RWF ';
+  static const hiddenBalance = '***** ';
+  static const balance = '30,935';
+  static const buttonTextDeposit = 'Deposit';
+  static const saveBoxBalance = 'SaveBox Balance';
+  static const saveGoalsBalance = 'SaveGoals Balance';
+  static const lockBoxBalance = 'LockBox Balance';
+  static const myToDos = 'My To-dos';
+  static const finishSettingUpYourAccount = 'Finish setting up your account';
+
+  ///My To Do
+  static const String tellUsAboutYourself = 'Tell us about yourself';
+  static const String linkMoMoAndATMCard = 'Link MoMo & ATM Card';
+  static const String setTransactionPin = 'Set Transaction Pin';
+//   static const String addWithdrawalBank = 'Add Withdrawal Bank';
+  static const String verifyyourIdentity = 'Verify your Identity';
+  static const String addApicture = 'Add a picture';
+  static const addWithdrawalBank = 'Add Withdrawal Bank';
+
+  /// My Savings
+  static const String mySavings = 'My Savings';
+  static const String saveBox = 'SaveBox';
+  static const String saveNow = 'Save Now';
+  static const String saveGoals = 'SaveGoals';
+  static const String lockBox = 'LockBox';
+  static const String lockNow = 'Lock Now';
+  static const String deposit = 'Deposit';
+  static const String withdraw = 'Withdraw';
+  static const String enableAutoSave = 'Enable Auto-Save';
+  static const String accountNumber = '1454-4564-2459-2045';
+  static const String accountName = 'Ademola Emmanuel Oshingbesan';
+  static const String quickSave = 'Quick Save/Deposit';
+  static const String sourceOfFund = 'Select source of funding';
+  static const String fundDestination = 'Funds Destination';
+  static const String enterAmount = 'Enter an amount';
+  static const String depositOptionText =
+      'This savings option to secure a portion of their savings without immediate access or use. ';
+  static const String withdrawalOptionText =
+      'This savings option to secure a portion of their savings without immediate access or use. ';
+  static const String saveBoxDetails =
+      'Save towards emergencies, This savings option helps users build readily accessible savings for unexpected expenses, providing financial peace of mind.';
+  static const String saveGoalsDetails =
+      'Save towards your goals, This savings option is for specific savings goals, such as vacations, gadgets, weddings, businesses, with customizable durations.';
+  static const String lockBoxDetails =
+      'Lock some chunk of your funds, This savings option to secure a portion of their savings without immediate access or use. It is ideal for long-term savings or savings that a user has no definite use for and does not want to spend.';
+
+  /// Savings Tips
+  static const String savingsTips = 'Savings Tips';
+  static const String seeMore = 'See More';
+  static const String savingsTipTitle1 = 'Do you know?';
+  static const String savingsTipsDetails1 =
+      'This savings option is for specific savings goals, such as vacations, gadgets, weddings, businesses,This savings option is for specific savings goals, such as vacations, ';
+
+  static const String savingsTipTitle2 = 'Do you know?';
+  static const String savingsTipsDetails2 =
+      'This savings option is for specific savings goals, such as vacations, gadgets, weddings, businesses,This savings option is for specific savings goals, such as vacations, ';
+
+  static const String savingsTipTitle3 = 'Do you know?';
+  static const String savingsTipsDetails3 =
+      'This savings option is for specific savings goals, such as vacations, gadgets, weddings, businesses,This savings option is for specific savings goals, such as vacations, ';
+
+  /// Recent Activities
+  static const String recentActivities = 'Recent Activities';
+  static const String noRecentActivity = 'No Recent Activities';
+
+
+  // Nav Bar
+  static const String home = 'Home';
+  static const String savings = 'Savings';
+  // static const String profile = 'Profile';
+  static const String history = 'History';
+
+
   //ROUTES
   static const signupRoute = '/signup';
   static const signinRoute = '/signin';
   static const forgotPswdRoute = '/forgot-pswd';
+  static const homeRoute = '/home';
+  static const savingsRoute = '/savings';
 
+  static const historyRoute = '/history';
+  static const savingsTipsRoute = '/savingsTipsPage';
+
+
+  // SaveBox Routes
+  static const saveBoxRoute = '/saveBoxPage';
+
+  // SaveGoal Routes
+  static const saveGoalRoute = '/saveGoalPage';
 
   //ROUTES NAME
   static const signupRouteName = 'signup';
   static const signinRouteName = 'signin';
+  static const homeRouteName = 'home';
+  static const savingsRouteName = 'savings';
+  static const profileRouteName = 'profile';
+  static const historyRouteName = 'history';
+  static const savingsTipsRouteName = 'savingsTipsPage';
+
+
+  // SaveBox Routes Name
+  static const saveBoxRouteName = 'saveBoxPage';
+
+  // SaveGoal Routes Name
+  static const saveGoalRouteName = 'saveGoalPage';
 }
