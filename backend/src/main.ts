@@ -24,7 +24,7 @@ async function bootstrap() {
 
   const fastifyInstance = app.getHttpAdapter().getInstance();
   fastifyInstance
-    .addHook('onRequest', async (req, res) => {
+    .addHook('onRequest', async (req) => {
       req.socket['encrypted'] =
         configService.getOrThrow<string>('NODE_ENV') === 'production';
     })

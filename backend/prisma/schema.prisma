@@ -1,0 +1,371 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String  @id @default(uuid())
+  email       String  @unique
+  password    String?
+  phoneNumber String? @unique
+
+  googleId String?
+
+  refreshToken                 String?
+  emailVerificationToken       String?
+  emailVerificationTokenExpiry DateTime?
+  passwordChangedAt            DateTime?
+  passwordResetOtp             Int?
+  passwordResetOtpExpiry       DateTime?
+
+  profile Profile?
+
+  role ROLE @default(user)
+
+  saveBox   SaveBox?
+  lockBoxes LockBox[]
+  saveGoals SaveGoal[]
+
+  paymentMethods   FundingSource[]
+  userSavingsTotal UserSavingsTotal?
+  activities       Activity[]
+  fundDestinations FundDestination[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([phoneNumber])
+}
+
+model Profile {
+  id                    String    @id @default(uuid())
+  firstName             String
+  lastName              String
+  email                 String?
+  phoneNumber           String?
+  isEmailVerified       Boolean   @default(false)
+  isPhoneNumberVerified Boolean   @default(false)
+  dob                   DateTime?
+  address               String?
+  identificationType    String?
+  identificationNumber  String?
+  nationality           String?
+  occupation            String?
+  avatar                String?
+
+  transactionPin String?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+/// User SaveBox: Doubles as user emergency fund and savings account
+model SaveBox {
+  id            String  @id @default(uuid())
+  userId        String  @unique
+  balance       Float   @default(0)
+  accountNumber String  @unique
+  accountName   String?
+
+  autoSaveEnabled           Boolean            @default(false)
+  autoSaveAmount            Float?
+  autoSaveFrequency         AUTOSAVEFREQUENCY?
+  autoSaveDayOfTheWeek      Int?
+  autoSaveDayOfTheMonth     Int?
+  autoSaveTime              String?
+  autoSaveFundingSourceId   String?            @unique
+  autoSaveFundingSourceType String?
+  autoSaveStartDate         DateTime?
+  autoSaveEndDate           DateTime?
+  nextAutoSave              DateTime?
+
+  transactions Transaction[]
+  activities   Activity[]
+
+  autoSaveFundingSource FundingSource? @relation(fields: [autoSaveFundingSourceId], references: [id])
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SaveGoal {
+  id     String            @id @default(uuid())
+  userId String
+  status SAVINGSSTATUSTYPE @default(ongoing)
+
+  goalTargetAmount Float
+  goalAmountSaved  Float     @default(0)
+  goalStartDate    DateTime  @default(now())
+  goalEndDate      DateTime?
+  goalName         String
+  goalDescription  String?
+  goalCategory     String?
+
+  autoSaveFrequency     SAVEGOALSFREQUENCY
+  autoSaveAmount        Float?
+  autoSaveDayOfTheWeek  Int?
+  autoSaveDayOfTheMonth Int?
+  autoSaveTime          String?
+  nextAutoSave          DateTime?
+
+  fundingSourceType SAVINGSFUNDINGSOURCETYPE?
+  fundingSourceId   String?
+
+  transactions  Transaction[]
+  fundingSource FundingSource? @relation(fields: [fundingSourceId], references: [id])
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LockBox {
+  id     String            @id @default(uuid())
+  userId String
+  status SAVINGSSTATUSTYPE @default(ongoing)
+  title  String
+
+  lockAmount       Float
+  lockInterestRate Float
+  lockStartDate    DateTime @default(now())
+  lockEndDate      DateTime
+
+  fundingSourceType SAVINGSFUNDINGSOURCETYPE
+  fundingSourceId   String
+
+  transactions  Transaction[]
+  fundingSource FundingSource @relation(fields: [fundingSourceId], references: [id])
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model FundingSource {
+  id     String @id @default(uuid())
+  userId String
+
+  type ALLFUNDINGSOURCETYPE
+
+  accountNumber String? @unique
+  bankName      String?
+  accountName   String?
+  cardNumber    String? @unique
+  cardExpiry    String?
+  cardHolder    String?
+  momoNumber    String? @unique
+  momoName      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  saveBox   SaveBox?
+  lockBoxes LockBox[]
+  saveGoals SaveGoal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model FundDestination {
+  id String @id @default(uuid())
+
+  type WITHDRAWALDESTINATIONTYPE
+
+  accountNumber String?
+  bankName      String?
+  accountName   String?
+  momoNumber    String?
+  momoName      String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type, id])
+}
+
+model Transaction {
+  id     String @id @default(uuid())
+  amount Float
+  userId String
+
+  // Source/Withdrawal(Destination)
+  saveBoxId String?
+
+  // Destination
+  saveGoalId String?
+  lockBoxId  String?
+
+  // External withdrawal destination details
+  extWithdrawalDestinationId String?
+  extWithdrawalDestination   FundDestination?           @relation(fields: [extWithdrawalDestinationId], references: [id], onDelete: Cascade)
+  extWithdrawalType          WITHDRAWALDESTINATIONTYPE?
+
+  sourceId String?
+
+  type        TRANSACTIONTYPE
+  description String?
+  reference   String?
+  status      TRANSACTIONSTATUS
+  metadata    Json?
+
+  methodOfFunding ALLFUNDINGSOURCETYPE
+
+  saveBox  SaveBox?  @relation(fields: [saveBoxId], references: [id])
+  saveGoal SaveGoal? @relation(fields: [saveGoalId], references: [id])
+  lockBox  LockBox?  @relation(fields: [lockBoxId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([saveBoxId])
+  @@index([userId])
+  @@index([status])
+}
+
+model UserSavingsTotal {
+  id     String @id @default(uuid())
+  userId String @unique
+
+  totalSaveGoals Float @default(0)
+  totalLockBoxes Float @default(0)
+  totalSaveBox   Float @default(0)
+  overallTotal   Float @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+/// User Activity
+model Activity {
+  id     String @id @default(uuid())
+  userId String
+
+  amount      Float            @default(0)
+  category    ACTIVITYCATEGORY
+  description String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  saveBoxId String?
+  SaveBox   SaveBox? @relation(fields: [saveBoxId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tip {
+  id        String   @id @default(uuid())
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// ROLE: user, super_admin
+enum ROLE {
+  user
+  super_admin
+}
+
+/// AUTOSAVEFREQUENCY: daily, weekly, monthly
+enum AUTOSAVEFREQUENCY {
+  daily
+  weekly
+  monthly
+}
+
+/// SAVEGOALSFREQUENCY: daily, weekly, monthly, manual
+enum SAVEGOALSFREQUENCY {
+  daily
+  weekly
+  monthly
+  manual
+}
+
+/// TRANSACTIONTYPE: deposit, withdrawal
+enum TRANSACTIONTYPE {
+  deposit
+  withdrawal
+}
+
+/// TRANSACTIONSTATUS: pending, success, failed
+enum TRANSACTIONSTATUS {
+  pending
+  success
+  failed
+}
+
+/// FUNDINGSOURCETYPE: bank, card, momo
+enum FUNDINGSOURCETYPE {
+  bank
+  card
+  momo
+}
+
+/// SAVINGSFUNDINGSOURCETYPE: momo, card, savebox
+enum SAVINGSFUNDINGSOURCETYPE {
+  momo
+  card
+  savebox
+}
+
+/// ALLFUNDINGSOURCETYPE: momo, card, savebox, bank
+enum ALLFUNDINGSOURCETYPE {
+  momo
+  card
+  savebox
+  bank
+}
+
+/// WITHDRAWALDESTINATIONTYPE: bank, momo
+enum WITHDRAWALDESTINATIONTYPE {
+  bank
+  momo
+}
+
+/// SAVINGSSTATUSTYPE: ongoing, completed
+enum SAVINGSSTATUSTYPE {
+  ongoing
+  completed
+}
+
+/// ACTIVITYCATEGORY: account, savebox, savegoal, lockbox
+enum ACTIVITYCATEGORY {
+  account
+  savebox
+  savegoal
+  lockbox
+}
