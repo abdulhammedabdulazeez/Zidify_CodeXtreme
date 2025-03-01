@@ -1,9 +1,7 @@
-import 'package:zidify_app/features/saveBox/data_layer/models/deposit_params_models.dart';
-import 'package:zidify_app/features/saveBox/data_layer/models/funding_sources_models.dart';
-import 'package:zidify_app/features/saveBox/domain_layer/blocs/deposit/bloc/deposit_bloc.dart';
-import 'package:zidify_app/features/saveBox/domain_layer/blocs/funding_sources/cubit/funding_sources_cubit.dart';
-import 'package:zidify_app/features/saveBox/domain_layer/blocs/saveBox/cubit/save_box_cubit.dart';
-import 'package:zidify_app/features/saveBox/ui/widgets/bank_details.dart';
+import 'package:zidify_app/features/saveBox/data_layer/models/fund_dests_sources.dart';
+import 'package:zidify_app/features/saveBox/data_layer/models/withdrawal_params_models.dart';
+import 'package:zidify_app/features/saveBox/domain_layer/blocs/fund_destinations/cubit/fund_destination_cubit.dart';
+import 'package:zidify_app/features/saveBox/domain_layer/blocs/withdraw/bloc/withdraw_bloc.dart';
 import 'package:zidify_app/features/saveBox/ui/widgets/payment_option_item.dart';
 import 'package:zidify_app/service_locator.dart';
 import 'package:zidify_app/utils/constants/colors.dart';
@@ -14,46 +12,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class DepositSecondScreen extends StatefulWidget {
+class WithdrawSecondScreen extends StatefulWidget {
   final double amount;
 
-  const DepositSecondScreen({
+  const WithdrawSecondScreen({
     required this.amount,
     super.key,
   });
 
   @override
-  State<DepositSecondScreen> createState() => _DepositSecondScreenState();
+  State<WithdrawSecondScreen> createState() => _WithdrawSecondScreenState();
 }
 
-class _DepositSecondScreenState extends State<DepositSecondScreen> {
-  late FundingSourcesCubit fundingCubit = sl<FundingSourcesCubit>();
-  late SaveBoxCubit saveBoxCubit = sl<SaveBoxCubit>();
+class _WithdrawSecondScreenState extends State<WithdrawSecondScreen> {
+  late FundDestinationCubit fundCubit = sl<FundDestinationCubit>();
 
-  String navigateDepositRoute() {
-    return '${AppTexts.savingsRoute}${AppTexts.saveBoxRoute}${AppTexts.depositFirstScreenRoute}'
-        '${AppTexts.depositSecondScreenRoute}${AppTexts.depositThirdScreenRoute}';
+  String navigateWithdrawRoute() {
+    return '${AppTexts.savingsRoute}${AppTexts.saveBoxRoute}${AppTexts.withdrawFirstScreenRoute}'
+        '${AppTexts.withdrawSecondScreenRoute}${AppTexts.withdrawThirdScreenRoute}';
   }
-  // Text('You are depositing: \$${widget.amount.toStringAsFixed(2)}')
 
   @override
   void initState() {
     super.initState();
-    // context.read<SaveBoxDepositBloc>().add(OnResetDepositSelectionEvent());
-    // context.read<FundingSourcesCubit>().getFundingSources();
-    fundingCubit.getFundingSources();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (mounted) {
+    //     context.read<SaveBoxWithdrawalBloc>().add(OnResetWithdrawalSelectionEvent());
+    //   }
+    // });
+    fundCubit.getFundDestinations();
   }
 
-  // @override
-  // void dispose() {
-  //   saveBoxCubit.close();
-  //   fundingCubit.close();
-  //   super.dispose();
-  // }
+  void onContinue(WithdrawalOptionSelectedState state) {
+    final selectedOptionName = state.highlightedItem.type;
+    final withdrawalId = state.highlightedItem.destinationId;
+    print("Selected Option: $selectedOptionName");
+    print("Selected Deposit: ${state.activeWithdrawalType}");
+
+    print("Amount: ${widget.amount}");
+
+    // Perform any additional logic here
+    final withdrawData = WithdrawalParams(
+      amount: widget.amount.toInt(),
+      extWithdrawalDestinationId: withdrawalId,
+      extWithdrawalType: selectedOptionName,
+    );
+
+    // Navigate to the next screen
+    NavigationService.navigateToWithdrawalThird(
+      context,
+      withdrawData,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = sl<SaveBoxDepositBloc>();
+    final bloc = sl<SaveBoxWithdrawalBloc>();
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -92,7 +106,7 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
             ],
           ),
           body: GestureDetector(
-            onTap: () => bloc.add(const OnResetDepositSelectionEvent()),
+            onTap: () => bloc.add(const OnResetWithdrawalSelectionEvent()),
             child: SingleChildScrollView(
               child: Container(
                 margin: const EdgeInsets.only(top: AppSizes.spaceBtwSections),
@@ -100,7 +114,7 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppTexts.sourceOfFund,
+                      AppTexts.fundDestination,
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge
@@ -108,7 +122,7 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
                     ),
                     const SizedBox(height: AppSizes.spaceBtwItemsSmall),
                     Text(
-                      AppTexts.depositOptionText,
+                      AppTexts.withdrawalOptionText,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -117,20 +131,19 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
                     const SizedBox(height: AppSizes.spaceBtwItemsLarge),
 
                     // DEPOSIT BLOC
-                    BlocBuilder<SaveBoxDepositBloc, SaveBoxDepositState>(
+                    BlocBuilder<SaveBoxWithdrawalBloc, SaveBoxWithdrawalState>(
                       bloc: bloc,
                       builder: (context, state) {
-                        return BlocBuilder<FundingSourcesCubit,
-                            FundingSourcesState>(
-                          bloc: fundingCubit,
-                          builder: (context, fundingSourceState) {
-                            if (fundingSourceState
-                                is FundingSourcesLoadingState) {
+                        return BlocBuilder<FundDestinationCubit,
+                            FundDestinationState>(
+                          bloc: fundCubit,
+                          builder: (context, fundDestState) {
+                            if (fundDestState is FundDestinationLoadingState) {
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
-                            } else if (fundingSourceState
-                                is FundingSourcesErrorState) {
+                            } else if (fundDestState
+                                is FundDestinationErrorState) {
                               return Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -143,53 +156,55 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      fundingSourceState.message,
+                                      fundDestState.message,
                                       textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
                               );
-                            } else if (fundingSourceState
-                                is FundingSourcesLoadedState) {
-                              final depositOptionsList =
-                                  fundingSourceState.fundingSources.groups;
+                            } else if (fundDestState
+                                is FundDestinationLoadedState) {
+                              final withdrawalOptionList =
+                                  fundDestState.fundDestinations.fundDestGroups;
 
                               return Column(
                                 children: [
                                   Column(
-                                    children: depositOptionsList.map((entry) {
+                                    children: withdrawalOptionList.map((entry) {
                                       final depositType =
                                           entry.type; // E.g., "Bank", "Momo"
                                       final items = entry
-                                          .sources; // List of options under this deposit type
+                                          .destinations; // List of options under this deposit type
                                       final isExpanded = state
-                                              is DepositOptionSelectedState &&
-                                          state.activeDepositType ==
+                                              is WithdrawalOptionSelectedState &&
+                                          state.activeWithdrawalType ==
                                               depositType; // Check expanded state
                                       final highlightedItem =
-                                          state is DepositOptionSelectedState
+                                          state is WithdrawalOptionSelectedState
                                               ? (state).highlightedItem
-                                              : FundingSource(
-                                                  sourceId: '',
-                                                  userId: '',
-                                                  type: '',
-                                                  momoName: '',
-                                                  momoNumber: '',
-                                                  cardHolder: '',
-                                                  cardNumber: '',
+                                              : FundDestination(
+                                                  destinationId: "",
+                                                  userId: "",
+                                                  type: "",
+                                                  accountNumber: "",
+                                                  accountName: "",
+                                                  momoName: "",
+                                                  momoNumber: "",
                                                 ); // Current highlighted items
                                       final selectedItemId = highlightedItem
-                                          .sourceId; // Highlighted item for the type
+                                          .destinationId; // Highlighted item for the type
 
                                       return Column(
                                         children: [
                                           // Deposit Type Header (Clickable to toggle selection)
                                           GestureDetector(
                                             onTap: () => bloc.add(
-                                              OnSelectDepositOptionEvent(
-                                                  FundingSourceGroup(
-                                                      type: depositType,
-                                                      sources: items)),
+                                              OnSelectWithdrawalOptionEvent(
+                                                FundDestGroup(
+                                                  type: depositType,
+                                                  destinations: items,
+                                                ),
+                                              ),
                                             ),
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -227,7 +242,7 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
                                                 (item) {
                                                   final isSelected =
                                                       selectedItemId ==
-                                                          item.sourceId; // Check selection
+                                                          item.destinationId; // Check selection
                                                   final isMomo =
                                                       depositType == "momo";
 
@@ -236,7 +251,9 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
                                                       OnHighlightListOptionEvent(
                                                           depositType, item),
                                                     ),
-                                                    child: PaymentOption(
+                                                    // child: Text('data'),
+                                                    child:
+                                                        WithdrawalPaymentOption(
                                                       isSelected: isSelected,
                                                       isMomo: isMomo,
                                                       item: item,
@@ -250,62 +267,26 @@ class _DepositSecondScreenState extends State<DepositSecondScreen> {
                                     }).toList(),
                                   ),
 
-                                  // Display Bank Details
-                                  if (state is DepositInitialState)
-                                    BlocBuilder<SaveBoxCubit, SaveBoxState>(
-                                      bloc: saveBoxCubit,
-                                      builder: (context, state) {
-                                        if (state is SaveBoxLoadedState) {
-                                          final savebox = state.saveBox;
-                                          return BankDetails(saveBox: savebox);
-                                        } else {
-                                          return const SizedBox();
-                                        }
-                                      },
-                                    ),
-                                  // BankDetails(saveBox: savebox,),
-
                                   const SizedBox(
                                       height: AppSizes.spaceBtwSections),
 
                                   // Conditionally Display the Button
-                                  if (state is DepositOptionSelectedState &&
-                                      state.highlightedItem.sourceId.isNotEmpty)
+                                  if (state is WithdrawalOptionSelectedState &&
+                                      state.highlightedItem.destinationId
+                                          .isNotEmpty)
                                     SizedBox(
                                       width: double.infinity,
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          final selectedOptionName =
-                                              state.highlightedItem.type;
-                                          final depositId =
-                                              state.highlightedItem.sourceId;
-                                          print(
-                                              "Selected Option: $selectedOptionName");
-                                          print(
-                                              "Selected DepositId: $depositId");
-
-                                          print("Amount: ${widget.amount}");
-
-                                          // Create an instance of DepositData
-                                          final depositData = DepositParams(
-                                            amount: widget.amount.toInt(),
-                                            methodOfFunding: selectedOptionName,
-                                            sourceId: depositId,
-                                          );
-
-                                          NavigationService
-                                              .navigateToDepositThird(
-                                            context,
-                                            depositData,
-                                          );
-                                        },
+                                        onPressed: () => onContinue(state),
                                         child: const Text(AppTexts.deposit),
                                       ),
                                     ),
                                 ],
                               );
                             } else {
-                              return const SizedBox();
+                              return const SizedBox(
+                                child: Text('There is nothing here'),
+                              );
                             }
                           },
                         );

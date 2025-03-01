@@ -127,6 +127,11 @@ class AppTexts {
   static const String recentActivities = 'Recent Activities';
   static const String noRecentActivity = 'No Recent Activities';
 
+  // SaveGoal
+  static const String saveGoaldef = 'What is SaveGoals?';
+  static const String ongoingSaveGoals = 'Ongoing';
+  static const String completedSaveGoals = 'Completed';
+
 
   // Nav Bar
   static const String home = 'Home';
@@ -157,6 +162,9 @@ class AppTexts {
 
   // SaveGoal Routes
   static const saveGoalRoute = '/saveGoalPage';
+
+  //Profile screen routes
+  static const profileRoute = '/profile';
 
   ///ROUTES NAME
   static const signupRouteName = 'signup';

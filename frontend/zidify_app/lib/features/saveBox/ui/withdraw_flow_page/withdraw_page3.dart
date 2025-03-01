@@ -1,6 +1,6 @@
-import 'package:zidify_app/features/saveBox/data_layer/models/deposit_params_models.dart';
-import 'package:zidify_app/features/saveBox/domain_layer/blocs/make_deposit/cubit/deposit_cubit.dart';
-import 'package:zidify_app/features/saveBox/ui/widgets/deposit_details.dart';
+import 'package:zidify_app/features/saveBox/data_layer/models/withdrawal_params_models.dart';
+import 'package:zidify_app/features/saveBox/domain_layer/blocs/make_withdrawal/cubit/withdraw_cubit.dart';
+import 'package:zidify_app/features/saveBox/ui/widgets/withdrawal_details.dart';
 import 'package:zidify_app/service_locator.dart';
 import 'package:zidify_app/utils/components/trans_successful.dart';
 import 'package:zidify_app/utils/constants/colors.dart';
@@ -10,26 +10,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class DepositThirdScreen extends StatefulWidget {
-  final DepositParams depositParams;
+class WithdrawThirdScreen extends StatefulWidget {
+  final WithdrawalParams withdrawalParams;
 
-  const DepositThirdScreen({super.key, required this.depositParams});
+  const WithdrawThirdScreen({super.key, required this.withdrawalParams});
 
   @override
-  State<DepositThirdScreen> createState() => _DepositThirdScreenState();
+  State<WithdrawThirdScreen> createState() => _WithdrawThirdScreenState();
 }
 
-class _DepositThirdScreenState extends State<DepositThirdScreen> {
-  late DepositCubit depositCubit = sl<DepositCubit>();
+class _WithdrawThirdScreenState extends State<WithdrawThirdScreen> {
+  late WithdrawCubit withdrawCubit = sl<WithdrawCubit>();
 
   @override
   void initState() {
     super.initState();
-    depositCubit.resetState(); // Reset the state of the cubit
+    withdrawCubit.resetState(); // Reset the state of the cubit
   }
 
+  // @override
+  // void dispose() {
+  //   WithdrawCubit.close(); // Clean up the cubit when widget is disposed
+  //   super.dispose();
+  // }
+
   void onSubmitted() {
-    depositCubit.makeDeposit(widget.depositParams);
+    withdrawCubit.makeWithdrawal(widget.withdrawalParams);
   }
 
   void goHome() {
@@ -71,7 +77,7 @@ class _DepositThirdScreenState extends State<DepositThirdScreen> {
                 Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "Confirm Deposit",
+                    "Confirm Withdrawal",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
@@ -82,16 +88,16 @@ class _DepositThirdScreenState extends State<DepositThirdScreen> {
             ),
           ),
           body: SizedBox(
-            child: BlocConsumer<DepositCubit, DepositState>(
-              bloc: depositCubit,
+            child: BlocConsumer<WithdrawCubit, WithdrawState>(
+              bloc: withdrawCubit,
               listener: (context, state) {
                 // First dismiss any existing dialog
-                if (state is DepositFailureState ||
-                    state is DepositSuccessState) {
+                if (state is WithdrawFailureState ||
+                    state is WithdrawSuccessState) {
                   Navigator.of(context, rootNavigator: true).pop();
                 }
 
-                if (state is DepositLoadingState) {
+                if (state is WithdrawLoadingState) {
                   showDialog(
                     context: context,
                     barrierDismissible:
@@ -103,22 +109,21 @@ class _DepositThirdScreenState extends State<DepositThirdScreen> {
                       );
                     },
                   );
-                } else if (state is DepositFailureState) {
+                } else if (state is WithdrawFailureState) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(state.message)),
                   );
                 }
               },
               builder: (context, state) {
-                if (state is DepositSuccessState) {
+                if (state is WithdrawSuccessState) {
                   return TransactionSuccessful(
                     box: "SaveBox",
                     onContinue: goHome,
                   );
                 }
-                return DepositDetails(
-                  depositParams: widget.depositParams,
-                  box: "SaveBox",
+                return WithdrawalDetails(
+                  withdrawalParams: widget.withdrawalParams,
                   onSubmitted: onSubmitted,
                 );
               },
