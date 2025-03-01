@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconly/iconly.dart';
 
 class AppIcons {
@@ -23,4 +24,7 @@ class AppIcons {
   static const IconData profileIcon = IconlyLight.profile;
   static const IconData profileIconFilled = IconlyBold.profile;
 
+  //SaveBox Screen Icons
+  // static const IconData withdrawIcon = FontAwesomeIcons.moneyBillTransfer;
+  static const IconData withdrawIcon = FontAwesomeIcons.landmark;
 }

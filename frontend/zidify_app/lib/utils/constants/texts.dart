@@ -148,23 +148,40 @@ class AppTexts {
 
   // SaveBox Routes
   static const saveBoxRoute = '/saveBoxPage';
+  static const withdrawFirstScreenRoute = '/withdrawFirstScreen';
+  static const withdrawSecondScreenRoute = '/withdrawSecondScreen';
+  static const withdrawThirdScreenRoute = '/withdrawThirdScreen';
+  static const depositFirstScreenRoute = '/depositFirstScreen';
+  static const depositSecondScreenRoute = '/depositSecondScreen';
+  static const depositThirdScreenRoute = '/depositThirdScreen';
 
   // SaveGoal Routes
   static const saveGoalRoute = '/saveGoalPage';
 
-  //ROUTES NAME
+  ///ROUTES NAME
   static const signupRouteName = 'signup';
   static const signinRouteName = 'signin';
+  static const forgotPswdRouteName = 'forgot-pswd';
+  static const resetPswdWithEmailRouteName = 'reset-pswd-with-email';
+  static const resetPswdWithPhoneRouteName = 'reset-pswd-with-phone';
+  static const verifyCodeRouteName = 'verify-code';
+  static const newPswdRouteName = 'new-pswd';
+  static const newPswdSuccessRouteName = 'new-pswd-success';
   static const homeRouteName = 'home';
   static const savingsRouteName = 'savings';
   static const profileRouteName = 'profile';
   static const historyRouteName = 'history';
   static const savingsTipsRouteName = 'savingsTipsPage';
-
-
   // SaveBox Routes Name
   static const saveBoxRouteName = 'saveBoxPage';
 
+  static const withdrawFirstScreenName = 'withdrawFirstScreen';
+  static const withdrawSecondScreenName = 'withdrawSecondScreen';
+  static const withdrawThirdScreenName = 'withdrawThirdScreen';
+
+  static const depositFirstScreenName = 'depositFirstScreen';
+  static const depositSecondScreenName = 'depositSecondScreen';
+  static const depositThirdScreenName = 'depositThirdScreen';
   // SaveGoal Routes Name
   static const saveGoalRouteName = 'saveGoalPage';
 }
