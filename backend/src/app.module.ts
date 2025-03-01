@@ -15,6 +15,7 @@ import { FundingSourcesModule } from './domains/funding-sources/funding-sources.
 import { FundDestModule } from './domains/fund-dest/fund-dest.module';
 import { SharedModule } from './shared/shared.module';
 import { ExceptionsFilter } from './common/exceptions';
+import { OpenaiModule } from './openai/openai.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ExceptionsFilter } from './common/exceptions';
     FundingSourcesModule,
     FundDestModule,
     SharedModule,
+    OpenaiModule,
   ],
   controllers: [AppController],
   providers: [
