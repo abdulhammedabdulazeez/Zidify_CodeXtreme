@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:zidify_app/features/auth/ui/sign_in.dart';
 import 'package:zidify_app/features/auth/ui/sign_up.dart';
+import 'package:zidify_app/features/home/errro_page.dart';
 
 import 'package:zidify_app/utils/constants/texts.dart';
 
@@ -28,6 +29,6 @@ class AppGoRouter {
         builder: (context, state) => const SignUpScreen(),
       ),
     ],
-    // errorBuilder: (context, state) => const ErrorPage(),
+    errorBuilder: (context, state) => const ErrorPage(),
   );
 }
